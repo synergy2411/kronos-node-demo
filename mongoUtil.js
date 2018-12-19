@@ -29,3 +29,18 @@ module.exports.removeUser = function(key){
         console.log(result);
     })
 }
+
+module.exports.updateUser = function(key, newPassword){
+    _db.collection('users').updateOne(key, { 
+        $set: { password : newPassword } }, function(err, result) {
+            if(err) console.log(err);
+        console.log("Updated the document with the new password", result);
+      });
+}
+
+module.exports.insertData = function(data){
+    _db.collection("users").insert(data, (err, stataus)=>{
+        if(err) console.log(err);
+        console.log("Data inserted!", stataus);
+    })
+}

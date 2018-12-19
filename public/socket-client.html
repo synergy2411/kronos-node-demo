@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>
+            Chatter App
+        </title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class="text-center text-success">Chatter App</h1>
+            <form class="well">
+                <textarea readonly id="taMsg" class="form-control" cols="30" rows="10"></textarea>
+                <div class="row">
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <input type="text" class="form-control" id="txtMsg">
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        <input type="button" value="Send" class="btn btn-success btn-block" id="btnSend">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script>
+            var username = prompt("Pls enter name...");
+            var socket = io.connect("http://localhost:3030");
+            socket.on("MsgToClient", (message)=>{
+                alert("Server Says : " + message.status);
+            });
+
+            $(document).ready(()=>{
+                $("#btnSend").on("click", (event)=>{
+                    event.preventDefault();
+                    let value = $("#txtMsg").val();
+                    socket.emit("MsgToServer", username, value);
+                    $("#txtMsg").val('');
+                })
+            
+                socket.on("toClient", (username,msg)=>{
+                    $("#taMsg").append(username + " : " + msg + "\n");
+                })
+            })
+
+            
+        </script>
+    </body>
+</html>
